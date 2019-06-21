@@ -1,0 +1,28 @@
+header#main-header {
+  background: #fff;
+  border-bottom: 1px solid #ddd;
+}
+
+header#main-header .header-content {
+  width: 100%;
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 30px 30px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+header#main-header .header-content h1 {
+  width: 8em;
+  margin: 0 auto;
+  font-size: 4em;
+}
+
+header#main-header .header-content p {
+  width: 16em;
+  margin: 0 auto;
+  font-size: 2em;
+}
