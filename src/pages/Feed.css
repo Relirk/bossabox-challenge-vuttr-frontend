@@ -4,6 +4,9 @@ section#tool-list {
   margin: 0 auto;
   padding: 0 30px;
 }
+section#tool-list .add-button {
+  color: #fff;
+}
 
 section#tool-list ul.root {
   display: flex;
@@ -38,7 +41,7 @@ section#tool-list ul li .header button .title {
   font-size: 2em;
 }
 
-section#tool-list ul li p .description p span {
+section#tool-list ul li p .description span span {
   color: #3f51b5;
   display: inline-block;
   margin-right: 10px;

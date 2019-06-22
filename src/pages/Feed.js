@@ -19,6 +19,7 @@ import {
 import { Clear, Search, Add } from "@material-ui/icons";
 
 import api from "../services/api";
+import Modal from "../components/Modal";
 import "./Feed.css";
 
 const styles = theme => ({
@@ -62,7 +63,11 @@ const styles = theme => ({
 class Feed extends Component {
   state = {
     feed: [],
-    checked: false
+    checked: false,
+    open: false,
+    name: "",
+    link: "",
+    description: ""
   };
 
   async componentDidMount() {
@@ -74,6 +79,47 @@ class Feed extends Component {
     this.setState({ ...this.state, [name]: event.target.checked });
   };
 
+  handleOpen = () => {
+    this.setState({ open: true });
+  };
+
+  handleClose = () => {
+    this.setState({ open: false });
+  };
+
+  handleChange = name => event => {
+    if ([name][0] === "tags") {
+      console.log("e");
+      const tags = event.target.value.split(" ");
+      if (tags[tags.length - 1] === "") {
+        tags.pop();
+      }
+      this.setState({ tags });
+    } else {
+      this.setState({ ...this.state, [name]: event.target.value });
+    }
+  };
+
+  handleSubmitNewTool = () => {
+    console.log(this.state);
+    api
+      .post("/tools", {
+        title: this.state.title,
+        link: this.state.link,
+        description: this.state.description,
+        tags: this.state.tags
+      })
+      .then(function(response) {
+        console.log(response);
+      });
+    this.setState({
+      open: false,
+      name: "",
+      link: "",
+      description: ""
+    });
+  };
+
   // handleLike = id => {
   //     api.tool(`/tools/${id}/like`);
   // };
@@ -83,6 +129,13 @@ class Feed extends Component {
 
     return (
       <section id="tool-list">
+        <Modal
+          open={this.state.open}
+          close={this.handleClose}
+          add={this.handleSubmitNewTool}
+          change={this.handleChange}
+        />
+
         <div className={classes.grow}>
           <AppBar position="static">
             <Toolbar>
@@ -117,9 +170,9 @@ class Feed extends Component {
               <div className={classes.grow} />
 
               <Button
-                variant="extended"
-                aria-label="Delete"
-                Style="color: #fff;"
+                aria-label="Add"
+                onClick={this.handleOpen}
+                className="add-button"
               >
                 <Add className="add-icon" />
                 Add
@@ -130,11 +183,11 @@ class Feed extends Component {
 
         <List className="root">
           {this.state.feed.map((tool, index) => (
-            <>
-              <ListItem key={index} alignItems="flex-start">
+            <React.Fragment key={index}>
+              <ListItem alignItems="flex-start">
                 <ListItemText
                   primary={
-                    <div className="header">
+                    <span className="header">
                       <Link
                         component="button"
                         variant="body2"
@@ -144,30 +197,34 @@ class Feed extends Component {
                       >
                         <Typography className="title">{tool.title}</Typography>
                       </Link>
-                      <Button variant="extended" aria-label="Delete">
+                      <Button aria-label="Delete">
                         <Clear className="clear-icon" />
                         remove
                       </Button>
-                    </div>
+                    </span>
                   }
                   secondary={
-                    <div className="description">
-                      <Typography component="p">
+                    <span className="description">
+                      <Typography component="span">
                         {tool.description}
-                        <div>
-                          {tool.tags.map((tool, index) => (
-                            <Typography component="span" color="textPrimary">
-                              #{tool}
-                            </Typography>
-                          ))}
-                        </div>
                       </Typography>
-                    </div>
+                      <span>
+                        {tool.tags.map((tool, index) => (
+                          <Typography
+                            key={index}
+                            component="span"
+                            color="textPrimary"
+                          >
+                            #{tool}
+                          </Typography>
+                        ))}
+                      </span>
+                    </span>
                   }
                 />
               </ListItem>
               <Divider />
-            </>
+            </React.Fragment>
           ))}
         </List>
       </section>
