@@ -32,7 +32,7 @@ function SimpleModal(props) {
             InputLabelProps={{
               shrink: true
             }}
-            onChange={props.change("name")}
+            onChange={props.change("title")}
           />
 
           <TextField

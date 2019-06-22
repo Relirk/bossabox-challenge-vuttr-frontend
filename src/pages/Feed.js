@@ -20,6 +20,7 @@ import { Clear, Search, Add } from "@material-ui/icons";
 
 import api from "../services/api";
 import Modal from "../components/Modal";
+import AlertDialog from "../components/AlertDialog";
 import "./Feed.css";
 
 const styles = theme => ({
@@ -65,31 +66,40 @@ class Feed extends Component {
     feed: [],
     checked: false,
     open: false,
-    name: "",
+    openAlert: false,
+    selectedTool: "",
+    title: "",
     link: "",
     description: ""
   };
 
   async componentDidMount() {
     const response = await api.get("/tools");
-    this.setState({ feed: response.data });
+    this.setState({ feed: response.data.reverse() });
   }
-
-  handleCheck = name => event => {
-    this.setState({ ...this.state, [name]: event.target.checked });
-  };
 
   handleOpen = () => {
     this.setState({ open: true });
+  };
+
+  handleOpenAlert = () => {
+    this.setState({ openAlert: true });
   };
 
   handleClose = () => {
     this.setState({ open: false });
   };
 
+  handleCloseAlert = () => {
+    this.setState({ openAlert: false });
+  };
+
+  handleCheck = name => event => {
+    this.setState({ ...this.state, [name]: event.target.checked });
+  };
+
   handleChange = name => event => {
     if ([name][0] === "tags") {
-      console.log("e");
       const tags = event.target.value.split(" ");
       if (tags[tags.length - 1] === "") {
         tags.pop();
@@ -100,29 +110,31 @@ class Feed extends Component {
     }
   };
 
-  handleSubmitNewTool = () => {
-    console.log(this.state);
-    api
-      .post("/tools", {
-        title: this.state.title,
-        link: this.state.link,
-        description: this.state.description,
-        tags: this.state.tags
-      })
-      .then(function(response) {
-        console.log(response);
-      });
+  handleSubmitNewTool = async () => {
+    const objToPost = {
+      title: this.state.title,
+      link: this.state.link,
+      description: this.state.description,
+      tags: this.state.tags
+    };
+
+    await api.post("/tools", objToPost);
+    const getResponse = await api.get("/tools");
+
     this.setState({
       open: false,
-      name: "",
+      title: "",
       link: "",
-      description: ""
+      description: "",
+      feed: getResponse.data.reverse()
     });
   };
 
-  // handleLike = id => {
-  //     api.tool(`/tools/${id}/like`);
-  // };
+  handleDeleteTool = async id => {
+    await api.delete(`/tools/${id}`);
+    const response = await api.get("/tools");
+    this.setState({ feed: response.data.reverse(), openAlert: false });
+  };
 
   render() {
     const { classes } = this.props;
@@ -187,38 +199,52 @@ class Feed extends Component {
               <ListItem alignItems="flex-start">
                 <ListItemText
                   primary={
-                    <span className="header">
-                      <Link
-                        component="button"
-                        variant="body2"
-                        onClick={() => {
-                          alert("I'm a button.");
+                    <>
+                      <span className="header">
+                        <Link
+                          component="button"
+                          variant="body2"
+                          onClick={() => {
+                            alert("I'm a button.");
+                          }}
+                        >
+                          <Typography className="title">
+                            {tool.title}
+                          </Typography>
+                        </Link>
+                        <Button
+                          aria-label="Delete"
+                          onClick={this.handleOpenAlert}
+                        >
+                          <Clear className="clear-icon" />
+                          remove
+                        </Button>
+                      </span>
+                      <AlertDialog
+                        open={this.state.openAlert}
+                        close={this.handleCloseAlert}
+                        tool={tool.title}
+                        delete={() => {
+                          this.handleDeleteTool(tool.id);
                         }}
-                      >
-                        <Typography className="title">{tool.title}</Typography>
-                      </Link>
-                      <Button aria-label="Delete">
-                        <Clear className="clear-icon" />
-                        remove
-                      </Button>
-                    </span>
+                      />
+                    </>
                   }
                   secondary={
                     <span className="description">
                       <Typography component="span">
                         {tool.description}
                       </Typography>
-                      <span>
-                        {tool.tags.map((tool, index) => (
-                          <Typography
-                            key={index}
-                            component="span"
-                            color="textPrimary"
-                          >
-                            #{tool}
-                          </Typography>
-                        ))}
-                      </span>
+                      {tool.tags.map((tool, index) => (
+                        <Typography
+                          key={index}
+                          component="span"
+                          color="textPrimary"
+                          className="tags"
+                        >
+                          #{tool}
+                        </Typography>
+                      ))}
                     </span>
                   }
                 />

@@ -41,7 +41,11 @@ section#tool-list ul li .header button .title {
   font-size: 2em;
 }
 
-section#tool-list ul li p .description span span {
+section#tool-list ul li p .description span {
+  display: block;
+}
+
+section#tool-list ul li p .description .tags {
   color: #3f51b5;
   display: inline-block;
   margin-right: 10px;
