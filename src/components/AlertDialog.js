@@ -8,7 +8,6 @@ import {
   DialogTitle,
   Typography
 } from "@material-ui/core";
-import { Clear } from "@material-ui/icons";
 
 export default function AlertDialog(props) {
   return (
@@ -21,7 +20,6 @@ export default function AlertDialog(props) {
       >
         <DialogTitle id="alert-dialog-title">
           <div className="modal-title">
-            <Clear className="add-icon" />
             <Typography variant="h6" id="modal-title">
               Remove tool
             </Typography>
@@ -29,7 +27,7 @@ export default function AlertDialog(props) {
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Are sure you want to remove this tool?
+            Are sure you want to remove <strong>{props.tool}</strong>?
           </DialogContentText>
         </DialogContent>
         <DialogActions>

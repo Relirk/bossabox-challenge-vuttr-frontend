@@ -42,8 +42,9 @@ class Feed extends Component {
     this.setState({ open: true });
   };
 
-  handleOpenAlert = id => {
-    localStorage.setItem("selectedTool", id);
+  handleOpenAlert = tool => {
+    localStorage.setItem("selectedTool", tool.id);
+    localStorage.setItem("selectedToolName", tool.title);
     this.setState({ openAlert: true });
   };
 
@@ -59,7 +60,7 @@ class Feed extends Component {
     this.setState({ ...this.state, [name]: event.target.checked });
   };
 
-  handleChange = name => event => {
+  handleChangeModal = name => event => {
     if ([name][0] === "tags") {
       const tags = event.target.value.split(" ");
       if (tags[tags.length - 1] === "") {
@@ -68,6 +69,18 @@ class Feed extends Component {
       this.setState({ tags });
     } else {
       this.setState({ ...this.state, [name]: event.target.value });
+    }
+  };
+
+  handleChangeSearch = async event => {
+    if (this.state.checked === true) {
+      // Tag ativa
+      const response = await api.get(`/tools?tags_like=${event.target.value}`);
+      this.setState({ feed: response.data.reverse() });
+    } else {
+      // Tag inativa
+      const response = await api.get(`/tools?q=${event.target.value}`);
+      this.setState({ feed: response.data.reverse() });
     }
   };
 
@@ -109,6 +122,7 @@ class Feed extends Component {
               </div>
               <InputBase
                 placeholder="Search…"
+                onChange={this.handleChangeSearch}
                 classes={{
                   root: "input-root",
                   input: "input-input"
@@ -153,33 +167,26 @@ class Feed extends Component {
             <ListItem alignItems="flex-start">
               <ListItemText
                 primary={
-                  <>
-                    <span className="header">
-                      <Link
-                        component="button"
-                        variant="body2"
-                        onClick={() => {
-                          alert("I'm a button.");
-                        }}
-                      >
-                        <Typography className="title">{tool.title}</Typography>
-                      </Link>
-                      <Button
-                        aria-label="Delete"
-                        onClick={() => {
-                          this.handleOpenAlert(tool.id);
-                        }}
-                      >
-                        <Clear className="clear-icon" />
-                        remove
-                      </Button>
-                    </span>
-                    <AlertDialog
-                      open={this.state.openAlert}
-                      close={this.handleCloseAlert}
-                      delete={this.handleDeleteTool}
-                    />
-                  </>
+                  <span className="header">
+                    <Link
+                      component="button"
+                      variant="body2"
+                      onClick={() => {
+                        alert("I'm a button.");
+                      }}
+                    >
+                      <Typography className="title">{tool.title}</Typography>
+                    </Link>
+                    <Button
+                      aria-label="Delete"
+                      onClick={() => {
+                        this.handleOpenAlert(tool);
+                      }}
+                    >
+                      <Clear className="clear-icon" />
+                      remove
+                    </Button>
+                  </span>
                 }
                 secondary={
                   <span className="description">
@@ -210,8 +217,16 @@ class Feed extends Component {
           open={this.state.open}
           close={this.handleClose}
           add={this.handleSubmitNewTool}
-          change={this.handleChange}
+          change={this.handleChangeModal}
         />
+
+        <AlertDialog
+          open={this.state.openAlert}
+          close={this.handleCloseAlert}
+          delete={this.handleDeleteTool}
+          tool={localStorage.getItem("selectedToolName")}
+        />
+
         {appBar}
         {toolList}
       </section>
