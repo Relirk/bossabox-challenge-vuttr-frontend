@@ -29,7 +29,7 @@ export default function AlertDialog(props) {
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Are sure you want to remove <strong>{props.tool}</strong>
+            Are sure you want to remove this tool?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
