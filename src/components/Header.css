@@ -16,8 +16,7 @@ header#main-header .header-content {
 }
 
 header#main-header .header-content h1 {
-  width: 8em;
-  margin: 0 auto;
+  width: 100%;
   margin-bottom: 14px;
   margin-top: 20px;
   font-size: 4em;
@@ -25,7 +24,6 @@ header#main-header .header-content h1 {
 }
 
 header#main-header .header-content p {
-  width: 16em;
-  margin: 0 auto;
+  width: 100%;
   font-size: 2em;
 }
