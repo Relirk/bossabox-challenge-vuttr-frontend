@@ -7,7 +7,9 @@ Tecnologias utilizadas:
 * [Yarn](https://yarnpkg.com/)
 
 ## Como executar
-Faça o clone/download deste repositório, garanta que sua [api](https://gitlab.com/bossabox/challenge-fake-api/tree/master) esteja rodando na porta 3000 e então execute `yarn install` e `yarn start`. A interface fica localizada em `http://localhost:3001`.
+- Faça o clone/download deste repositório;
+- Garanta que sua [api](https://gitlab.com/bossabox/challenge-fake-api/tree/master) esteja rodando na porta 3000;
+- Execute `yarn install` e `yarn start`. A interface fica localizada em `http://localhost:3001`.
 
 ## Recursos
 Esta interface tem implementado as seguintes rotas da api:
