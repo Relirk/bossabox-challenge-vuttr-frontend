@@ -1,5 +1,8 @@
-# VUTTR FRONTEND
+# VUTTR (Frontend)
 Este repositório contém uma simples interface front-end para o desafio de front-end do BossaBox.
+- Em conjunto com a api a interface é completamente funcional.
+
+![Screenshot 1](bossabox.png)
 
 Tecnologias utilizadas:
 * [ReactJS](https://reactjs.org/)
