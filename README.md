@@ -1,4 +1,6 @@
 # VUTTR (Frontend)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/0f6cdd55-94d0-4205-b51d-18cd6f4326b1/deploy-status)](https://app.netlify.com/sites/bossabox-challenge/deploys)
+
 Este repositório contém uma simples interface front-end para o desafio de front-end do BossaBox.
 - Em conjunto com a api a interface é completamente funcional.
 
